@@ -7,6 +7,9 @@ import * as fs from 'fs';
 export function activate(context: vscode.ExtensionContext) {
     const diagnostics = vscode.languages.createDiagnosticCollection('Circuit Diagram');
 
+    const outputChannel = vscode.window.createOutputChannel('Circuit Diagram');
+    context.subscriptions.push(outputChannel);
+
     const disposable = vscode.commands.registerCommand('circuitDiagram.renderPreview', (args) => {
         if (!args || !args.fsPath) {
             // Not invoked on a file
@@ -44,11 +47,10 @@ export function activate(context: vscode.ExtensionContext) {
 
         const result = child_process.spawnSync(executablePath, renderArgs);
 
-        // Print output to console for debugging
+        // Print output to console for debugging        
         const output = result.stdout.toString();
-        console.log(output);
-        const outputErr = result.stderr.toString();
-        console.log(outputErr);
+        outputChannel.appendLine(output);
+        outputChannel.appendLine(result.stderr.toString());
 
         // Parse errors
         const lines = output.split('\n');
@@ -72,9 +74,14 @@ export function deactivate() {
 
 // Example log line: "ERROR .\resistor.xml(88,8:88,19): Property single_text used for text value does not exist"
 function parseLogLine(line: string): vscode.Diagnostic {
-    if (!line.startsWith('ERROR')) {
+    const levels = ['ERROR', 'WARNING', 'INFORMATION'];
+
+    const level = levels.find((x) => line.startsWith(x));
+    if (!level) {
         return null;
     }
+
+    const severity = getSeverity(level);
 
     const startPos = line.indexOf('(');    
     const endPos = line.indexOf(')');
@@ -83,5 +90,16 @@ function parseLogLine(line: string): vscode.Diagnostic {
     return new vscode.Diagnostic(new vscode.Range(
         new vscode.Position(location[0] - 1, location[1] - 1),
         new vscode.Position(location[2] - 1, location[3] - 1),
-    ), line.substring(endPos + 2));
+    ), line.substring(endPos + 2), severity);
+}
+
+function getSeverity(level: string) {
+    switch(level) {
+        case 'ERROR':
+            return vscode.DiagnosticSeverity.Error;
+        case 'WARNING':
+            return vscode.DiagnosticSeverity.Warning;
+        default:
+            return vscode.DiagnosticSeverity.Information;
+    }
 }
