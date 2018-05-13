@@ -59,10 +59,14 @@ export function activate(context: vscode.ExtensionContext) {
 
         if (result.status) {
             vscode.window.showErrorMessage('An error occurred running the Circuit Diagram executable.');
-        } else if (ds.length) {
+        } else if (ds.find((x) => x.severity === vscode.DiagnosticSeverity.Error)) {
             vscode.window.showInformationMessage('Unable to render due to errors');
         } else {
             vscode.window.showInformationMessage('Rendered preview');
+            vscode.commands.executeCommand('vscode.open', vscode.Uri.file(outputPath), 2).then(() => {}, (rejectedReason) => {
+                outputChannel.appendLine(rejectedReason);
+                vscode.window.showInformationMessage('Unable to open preview.');
+            });
         }
     });
 
