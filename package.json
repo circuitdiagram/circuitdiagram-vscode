@@ -2,7 +2,7 @@
     "name": "circuitdiagram-vscode",
     "displayName": "Circuit Diagram",
     "description": "Circuit Diagram component editor for VS Code.",
-    "version": "0.1.0-dev",
+    "version": "0.2.0-dev",
     "publisher": "CircuitDiagram",
     "homepage": "http://www.circuit-diagram.org/",
     "repository": {
