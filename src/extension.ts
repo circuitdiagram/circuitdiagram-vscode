@@ -35,6 +35,12 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
 
+        // Debug layout
+        const debugLayout = config.get<Boolean>('debugLayout');
+        if (debugLayout) {
+            executableCommand.push('-d');
+        }
+
         // Build render command line args
         const propertiesPath = path.join(path.dirname(args.fsPath), 'render.properties');        
         const outputPath = path.join(path.dirname(args.fsPath), 'render.png');
@@ -52,6 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         renderArgs.push(args.fsPath);
 
+        outputChannel.appendLine(`${executableCommand} ${renderArgs.join(' ')}`);
         const result = child_process.spawnSync(executablePath, renderArgs);
 
         // Print output to console for debugging        

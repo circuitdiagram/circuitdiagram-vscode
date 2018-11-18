@@ -2,7 +2,7 @@
     "name": "circuitdiagram-vscode",
     "displayName": "Circuit Diagram",
     "description": "Circuit Diagram component editor for VS Code.",
-    "version": "0.2.0-dev",
+    "version": "0.3.0-dev",
     "publisher": "CircuitDiagram",
     "homepage": "http://www.circuit-diagram.org/",
     "repository": {
@@ -47,9 +47,14 @@
                     "default": null,
                     "description": "Path to Circuit Diagram command-line executable."
                 },
+                "circuitDiagram.debugLayout": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Render component layout information (shown in blue)."
+                },
                 "circuitDiagram.executableCommand": {
                     "type": "array",
-                    "default": "render",
+                    "default": [ "render" ],
                     "description": "Command to pass to the command line executable."
                 }
             }
