@@ -40,12 +40,17 @@
 			]
         },
         "configuration": {
-            "title": "Circuit Diagram Configuration",
+            "title": "Circuit Diagram",
             "properties": {
                 "circuitDiagram.executablePath": {
                     "type": "string",
                     "default": null,
-                    "description": "Path to Circuit Diagram command-line tool executable."
+                    "description": "Path to Circuit Diagram command-line executable."
+                },
+                "circuitDiagram.executableCommand": {
+                    "type": "array",
+                    "default": "render",
+                    "description": "Command to pass to the command line executable."
                 }
             }
         }

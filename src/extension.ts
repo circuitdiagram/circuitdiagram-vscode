@@ -28,12 +28,19 @@ export function activate(context: vscode.ExtensionContext) {
             return;
         }
 
+        // Get command to run
+        const executableCommand = config.get<string[]>('executableCommand');
+        if (!executableCommand) {
+            vscode.window.showErrorMessage('Executable command cannot be empty.');
+            return;
+        }
+
         // Build render command line args
         const propertiesPath = path.join(path.dirname(args.fsPath), 'render.properties');        
         const outputPath = path.join(path.dirname(args.fsPath), 'render.png');
 
         const renderArgs = [
-            'render',
+            ...executableCommand,
             '-o',
             outputPath
         ];
