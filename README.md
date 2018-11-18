@@ -19,9 +19,9 @@ Visit [circuit-diagram.org](http://www.circuit-diagram.org/downloads) to downloa
 latest version. You can manually install the VSIX file in VS Code.
 
 You must also [download](http://www.circuit-diagram.org/downloads) the Circuit Diagram
-`Command-line Tool` for your platform and configure the path in your VS Code settings.
-If the command-line tool download is an archive file (e.g. zip), you will need to
-extract it first.
+`Command-line` for your platform and configure the path in your VS Code settings.
+If the command-line download is an archive file (e.g. zip), you will need to extract it first.
+See [command line setup](https://www.circuit-diagram.org/help/command-line) for more information.
 
 For example:
 
@@ -35,4 +35,8 @@ For example:
 
 This extension contributes the following settings:
 
-* `circuitDiagram.executablePath`: path to the Circuit Diagram Command-line Tool executable (required)
+* `circuitDiagram.executablePath`: path to the Circuit Diagram Command-line executable (required)
+
+* `circuitDiagram.debugLayout`: render component layout information (shown in blue, default `false`)
+
+* `circuitDiagram.executableCommand`: override render command (advanced use only)
