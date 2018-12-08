@@ -29,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         // Get command to run
-        const executableCommand = config.get<string[]>('executableCommand');
+        const executableCommand = [...config.get<string[]>('executableCommand')];
         if (!executableCommand) {
             vscode.window.showErrorMessage('Executable command cannot be empty.');
             return;
