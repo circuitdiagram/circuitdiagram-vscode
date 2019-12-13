@@ -2,7 +2,7 @@
     "name": "circuitdiagram-vscode",
     "displayName": "Circuit Diagram",
     "description": "Circuit Diagram component editor for VS Code.",
-    "version": "0.3.0-dev",
+    "version": "0.4.0-dev",
     "publisher": "CircuitDiagram",
     "homepage": "http://www.circuit-diagram.org/",
     "repository": {
@@ -12,7 +12,7 @@
     "license": "GPLv2",
     "icon": "assets/logo256.png",
     "engines": {
-        "vscode": "^1.2.0"
+        "vscode": "^1.38.0"
     },
     "categories": [
         "Other"
@@ -22,22 +22,29 @@
     ],
     "main": "./out/extension",
     "contributes": {
-        "commands": [{
-            "command": "circuitDiagram.renderPreview",
-            "title": "Render Component Preview",
-            "icon": {
-                "light": "./assets/logo16.png",
-                "dark": "./assets/logo16.png"
+        "commands": [
+            {
+                "command": "circuitDiagram.renderPreview",
+                "title": "Render Component Preview",
+                "icon": {
+                    "light": "./assets/logo16.png",
+                    "dark": "./assets/logo16.png"
+                }
             }
-        }],
+        ],
         "menus": {
-			"editor/title": [
-				{
-					"command": "circuitDiagram.renderPreview",
+            "editor/title": [
+                {
+                    "command": "circuitDiagram.renderPreview",
                     "when": "resourceLangId == xml",
                     "group": "navigation"
-				}
-			]
+                },
+                {
+                    "command": "circuitDiagram.renderPreview",
+                    "when": "resourceLangId == yaml",
+                    "group": "navigation"
+                }
+            ]
         },
         "configuration": {
             "title": "Circuit Diagram",
@@ -45,7 +52,7 @@
                 "circuitDiagram.executablePath": {
                     "type": "string",
                     "default": null,
-                    "description": "Path to Circuit Diagram command-line executable."
+                    "description": "Path to Circuit Diagram command line executable."
                 },
                 "circuitDiagram.debugLayout": {
                     "type": "boolean",
@@ -54,8 +61,20 @@
                 },
                 "circuitDiagram.executableCommand": {
                     "type": "array",
-                    "default": [ "render" ],
+                    "default": [
+                        "render"
+                    ],
                     "description": "Command to pass to the command line executable."
+                },
+                "circuitDiagram.renderer": {
+                    "type": "string",
+                    "default": "Default",
+                    "enum": [
+                        "Default",
+                        "Skia",
+                        "ImageSharp"
+                    ],
+                    "description": "Image renderer to use. Change this only if there are problems with the default renderer on your platform."
                 }
             }
         }
@@ -64,15 +83,14 @@
         "vscode:prepublish": "npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install",
         "test": "npm run compile && node ./node_modules/vscode/bin/test",
         "lint": "tslint -c tslint.json 'src/**/*.ts'"
     },
     "devDependencies": {
-        "typescript": "^2.6.1",
-        "vscode": "^1.1.6",
-        "tslint": "^5.8.0",
         "@types/node": "^7.0.43",
-        "@types/mocha": "^2.2.42"
+        "@types/vscode": "^1.38.0",
+        "await-spawn": "^3.0.0",
+        "tslint": "^5.8.0",
+        "typescript": "^3.5.1"
     }
 }

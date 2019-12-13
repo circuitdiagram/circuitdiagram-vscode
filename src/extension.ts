@@ -1,6 +1,7 @@
 'use strict';
 import * as vscode from 'vscode';
 import * as path from 'path';
+import * as util from 'util';
 import * as child_process from "child_process";
 import * as fs from 'fs';
 
@@ -10,11 +11,17 @@ export function activate(context: vscode.ExtensionContext) {
     const outputChannel = vscode.window.createOutputChannel('Circuit Diagram');
     context.subscriptions.push(outputChannel);
 
-    const disposable = vscode.commands.registerCommand('circuitDiagram.renderPreview', (args) => {
+    const status = vscode.window.createStatusBarItem();
+    status.tooltip = 'Circuit Diagram';
+
+    const disposable = vscode.commands.registerCommand('circuitDiagram.renderPreview', async (args) => {
         if (!args || !args.fsPath) {
             // Not invoked on a file
             return;
         }
+
+        status.text = 'Rendering...';
+        status.show();
 
         // Get path to Circuit Diagram exe
         const config = vscode.workspace.getConfiguration('circuitDiagram');
@@ -52,31 +59,42 @@ export function activate(context: vscode.ExtensionContext) {
         ];
 
         if (fs.existsSync(propertiesPath)) {
-            console.log('Using properties file', propertiesPath);
             renderArgs.push('-p', propertiesPath);
+        }
+
+        // Set renderer
+        const rendererOption = config.get<string>('renderer');
+        if (rendererOption && rendererOption.toLowerCase() !== 'default') {
+            renderArgs.push('--renderer', rendererOption);
         }
 
         renderArgs.push(args.fsPath);
 
-        outputChannel.appendLine(`${executableCommand} ${renderArgs.join(' ')}`);
-        const result = child_process.spawnSync(executablePath, renderArgs);
+        outputChannel.appendLine(`${executablePath} ${executableCommand.join(' ')} ${renderArgs.join(' ')}`);
+        const { code, stdout, stderr } = await asyncSpawn(executablePath, renderArgs);
 
-        // Print output to console for debugging        
-        const output = result.stdout.toString();
-        outputChannel.appendLine(output);
-        outputChannel.appendLine(result.stderr.toString());
+        // Print output to console for debugging      
+        outputChannel.appendLine(stdout);
+        outputChannel.appendLine(stderr);
 
         // Parse errors
-        const lines = output.split('\n');
+        const lines = stdout.split('\n');
         const ds = lines.map((x) => parseLogLine(x)).filter((x) => x !== null);
         diagnostics.set(args, ds);
 
-        if (result.status) {
+        if (code && code !== 2) {
             vscode.window.showErrorMessage('An error occurred running the Circuit Diagram executable.');
+            status.text = `Error rendering`;
+            status.show();
         } else if (ds.find((x) => x.severity === vscode.DiagnosticSeverity.Error)) {
             vscode.window.showInformationMessage('Unable to render due to errors');
+            status.text = `Error rendering`;
+            status.show();
         } else {
-            vscode.window.showInformationMessage('Rendered preview');
+            const inputFileName = path.basename(args.fsPath);
+            status.text = `Rendered ${inputFileName}`;
+            status.show();
+
             vscode.commands.executeCommand('vscode.open', vscode.Uri.file(outputPath), 2).then(() => {}, (rejectedReason) => {
                 outputChannel.appendLine(rejectedReason);
                 vscode.window.showInformationMessage('Unable to open preview.');
@@ -120,4 +138,25 @@ function getSeverity(level: string) {
         default:
             return vscode.DiagnosticSeverity.Information;
     }
+}
+
+function asyncSpawn(command: string, args: string[]): Promise<{ code: number, stdout: string, stderr: string }> {
+    const opts: child_process.SpawnOptions = {};
+
+    // Set working dir to workspace folder
+    if (vscode.workspace.workspaceFolders && vscode.workspace.workspaceFolders[0]) {
+        const fsPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+        if (fs.existsSync(fsPath)) {
+            opts.cwd = fsPath;
+        }
+    }
+
+    const process = child_process.spawn(command, args, opts);
+    const stdout = [];
+    const stderr = [];
+    process.stdout.on('data', (x) => stdout.push(x));
+    process.stderr.on('data', (x) => stderr.push(x));
+    return new Promise(resolve => {
+        process.on('exit', (code) => resolve({ code, stdout: stdout.join(''), stderr: stderr.join('') }));
+    });
 }
