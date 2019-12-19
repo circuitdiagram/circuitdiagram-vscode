@@ -30,6 +30,10 @@
                     "light": "./assets/logo16.png",
                     "dark": "./assets/logo16.png"
                 }
+            },
+            {
+                "command": "circuitDiagram.showOutputWindow",
+                "title": "Show Circuit Diagram Output Window"
             }
         ],
         "menus": {

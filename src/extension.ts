@@ -11,8 +11,13 @@ export function activate(context: vscode.ExtensionContext) {
     const outputChannel = vscode.window.createOutputChannel('Circuit Diagram');
     context.subscriptions.push(outputChannel);
 
+    context.subscriptions.push(vscode.commands.registerCommand('circuitDiagram.showOutputWindow', () => {
+        outputChannel.show();
+    }));
+
     const status = vscode.window.createStatusBarItem();
     status.tooltip = 'Circuit Diagram';
+    status.command = 'circuitDiagram.showOutputWindow';
 
     const disposable = vscode.commands.registerCommand('circuitDiagram.renderPreview', async (args) => {
         if (!args || !args.fsPath) {
@@ -84,15 +89,15 @@ export function activate(context: vscode.ExtensionContext) {
 
         if (code && code !== 2) {
             vscode.window.showErrorMessage('An error occurred running the Circuit Diagram executable.');
-            status.text = `Error rendering`;
+            status.text = 'Error Rendering';
             status.show();
         } else if (ds.find((x) => x.severity === vscode.DiagnosticSeverity.Error)) {
             vscode.window.showInformationMessage('Unable to render due to errors');
-            status.text = `Error rendering`;
+            status.text = 'Error Rendering';
             status.show();
         } else {
             const inputFileName = path.basename(args.fsPath);
-            status.text = `Rendered ${inputFileName}`;
+            status.text = 'Rendered Component';
             status.show();
 
             vscode.commands.executeCommand('vscode.open', vscode.Uri.file(outputPath), 2).then(() => {}, (rejectedReason) => {
