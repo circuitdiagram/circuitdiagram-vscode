@@ -2,7 +2,7 @@
     "name": "circuitdiagram-vscode",
     "displayName": "Circuit Diagram",
     "description": "Circuit Diagram component editor for VS Code.",
-    "version": "0.4.0-dev",
+    "version": "0.5.0-dev",
     "publisher": "CircuitDiagram",
     "homepage": "http://www.circuit-diagram.org/",
     "repository": {
@@ -18,13 +18,13 @@
         "Other"
     ],
     "activationEvents": [
-        "onCommand:circuitDiagram.renderPreview"
+        "onCommand:circuitDiagram.renderAndLoadOutline"
     ],
     "main": "./out/extension",
     "contributes": {
         "commands": [
             {
-                "command": "circuitDiagram.renderPreview",
+                "command": "circuitDiagram.renderAndLoadOutline",
                 "title": "Render Component Preview",
                 "icon": {
                     "light": "./assets/logo16.png",
@@ -32,21 +32,37 @@
                 }
             },
             {
+                "command": "circuitDiagram.loadComponentOutline",
+                "title": "Load Component Outline"
+            },
+            {
                 "command": "circuitDiagram.showOutputWindow",
                 "title": "Show Circuit Diagram Output Window"
+            },
+            {
+                "command": "circuitDiagram.setRenderProperty",
+                "title": "Set Render Property"
             }
         ],
         "menus": {
             "editor/title": [
                 {
-                    "command": "circuitDiagram.renderPreview",
+                    "command": "circuitDiagram.renderAndLoadOutline",
                     "when": "resourceLangId == xml",
                     "group": "navigation"
                 },
                 {
-                    "command": "circuitDiagram.renderPreview",
+                    "command": "circuitDiagram.renderAndLoadOutline",
                     "when": "resourceLangId == yaml",
                     "group": "navigation"
+                }
+            ]
+        },
+        "views": {
+            "explorer": [
+                {
+                    "id": "circuitDiagram.componentOutline",
+                    "name": "Component Outline"
                 }
             ]
         },
@@ -63,12 +79,10 @@
                     "default": false,
                     "description": "Render component layout information (shown in blue)."
                 },
-                "circuitDiagram.executableCommand": {
+                "circuitDiagram.executableCommandPrefix": {
                     "type": "array",
-                    "default": [
-                        "render"
-                    ],
-                    "description": "Command to pass to the command line executable."
+                    "default": [],
+                    "description": "Prefix command to pass to the command line executable."
                 },
                 "circuitDiagram.renderer": {
                     "type": "string",
