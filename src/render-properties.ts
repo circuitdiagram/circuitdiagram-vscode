@@ -12,6 +12,7 @@ export class RenderProperties {
             fs.exists(this.fsPath, (exists) => {
                 if (!exists) {
                     this.outputChannel.appendLine(`render.properties does not exist: '${this.fsPath}'`);
+                    this.lines = [];
                     resolve();
                     return;
                 }
