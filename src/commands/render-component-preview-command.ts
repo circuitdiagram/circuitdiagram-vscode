@@ -50,6 +50,18 @@ export function registerRenderComponentPreviewCommand(context: ExtensionContext)
             renderArgs.push('-d');
         }
 
+        // Grid
+        const showGrid = config.get<Boolean>('showGrid');
+        if (showGrid) {
+            renderArgs.push('--grid');
+        }
+
+        // Scale
+        const renderScale = config.get<number>('renderScale');
+        if (renderScale !== null) {
+            renderArgs.push('--scale', renderScale.toString(10));
+        }
+
         if (context.renderProperties && context.renderProperties.isModified) {
             context.renderProperties.save();
         }

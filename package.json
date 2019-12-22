@@ -2,7 +2,7 @@
     "name": "circuitdiagram-vscode",
     "displayName": "Circuit Diagram",
     "description": "Circuit Diagram component editor for VS Code.",
-    "version": "0.5.0-dev",
+    "version": "0.6.0-dev",
     "publisher": "CircuitDiagram",
     "homepage": "http://www.circuit-diagram.org/",
     "repository": {
@@ -78,6 +78,16 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Render component layout information (shown in blue)."
+                },
+                "circuitDiagram.showGrid": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Render a grid behind the component."
+                },
+                "circuitDiagram.renderScale": {
+                    "type": [ "number", "null" ],
+                    "default": null,
+                    "description": "Scale the output image (1.0 = no scale). E.g. set to 2.0 for high resolution displays."
                 },
                 "circuitDiagram.executableCommandPrefix": {
                     "type": "array",
