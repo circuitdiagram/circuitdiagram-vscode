@@ -4,6 +4,9 @@
 
 A Visual Studio Code extension for creating components for Circuit Diagram.
 
+View instructions for how to create new components using this extension
+[here](https://componenteditor.com/help/).
+
 ## Features
 
 Provides a _render preview_ button when editing Circuit Diagram component XML files.
