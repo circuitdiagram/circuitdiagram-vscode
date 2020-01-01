@@ -13,6 +13,8 @@ export class ComponentOutlineProvider implements vscode.TreeDataProvider<vscode.
     private propertiesNode = new vscode.TreeItem('Properties', vscode.TreeItemCollapsibleState.Expanded);
 
     private horizontalStateNode = new vscode.TreeItem('horizontal');
+    private sizeNode = new vscode.TreeItem('size');
+    private flipStateNode = new vscode.TreeItem('flip');
 
 	private _onDidChangeTreeData: vscode.EventEmitter<vscode.TreeItem | undefined> = new vscode.EventEmitter<vscode.TreeItem | undefined>();
 	readonly onDidChangeTreeData: vscode.Event<vscode.TreeItem | undefined> = this._onDidChangeTreeData.event;
@@ -22,6 +24,16 @@ export class ComponentOutlineProvider implements vscode.TreeDataProvider<vscode.
             title: 'setState',
             command: commands.setComponentState,
             arguments: [{ state: 'horizontal' }],
+        };
+        this.sizeNode.command = {
+            title: 'setSize',
+            command: commands.setComponentState,
+            arguments: [{ state: 'size' }],
+        };
+        this.flipStateNode.command = {
+            title: 'setFlip',
+            command: commands.setComponentState,
+            arguments: [{ state: 'flip' }],
         };
     }
 
@@ -54,7 +66,9 @@ export class ComponentOutlineProvider implements vscode.TreeDataProvider<vscode.
 
         if (element === this.stateNode) {
             this.horizontalStateNode.description = this.renderProperties.getComponentState('horizontal');
-            return Promise.resolve([ this.horizontalStateNode ]);
+            this.sizeNode.description = this.renderProperties.getComponentState('size');
+            this.flipStateNode.description = this.renderProperties.getComponentState('flip');
+            return Promise.resolve([ this.horizontalStateNode, this.sizeNode, this.flipStateNode ]);
         }
 
         if (element === this.configurationsNode) {
