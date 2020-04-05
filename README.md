@@ -37,7 +37,10 @@ directory as your component file and opened in a pane to the right.
 This project is in development and is not yet available in the VS marketplace. Visit
 [circuit-diagram.org](http://www.circuit-diagram.org/downloads) or the
 [releases page](https://github.com/circuitdiagram/circuitdiagram-vscode/releases) to
-download the latest version. You can manually install the VSIX file in VS Code.
+download the latest version.
+
+Manually install the VSIX file in VS Code by going to _Extensions_ -> _Install from
+VSIX_. The extension cannot be installed by double clicking on the VSIX file.
 
 This extension requires the Circuit Diagram command-line application to render
 components. You must [download](http://www.circuit-diagram.org/downloads) the appropriate
