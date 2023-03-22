@@ -1,0 +1,24 @@
+name: CI
+on:
+  push: {}
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+
+    - run: npm install -g @vscode/vsce
+    - run: npm ci
+    - run: vsce package
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: VSIX
+        path: "*.vsix"
+        if-no-files-found: error
