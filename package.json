@@ -2,7 +2,7 @@
     "name": "circuitdiagram-vscode",
     "displayName": "Circuit Diagram",
     "description": "Circuit Diagram component editor for VS Code.",
-    "version": "0.7.0-dev",
+    "version": "0.7.1-dev",
     "publisher": "CircuitDiagram",
     "homepage": "http://www.circuit-diagram.org/",
     "repository": {
@@ -85,7 +85,10 @@
                     "description": "Render a grid behind the component."
                 },
                 "circuitDiagram.renderScale": {
-                    "type": [ "number", "null" ],
+                    "type": [
+                        "number",
+                        "null"
+                    ],
                     "default": null,
                     "description": "Scale the output image (1.0 = no scale). E.g. set to 2.0 for high resolution displays."
                 },
@@ -114,10 +117,13 @@
         "test": "npm run compile && node ./node_modules/vscode/bin/test",
         "lint": "tslint -c tslint.json 'src/**/*.ts'"
     },
+    "dependencies": {
+        "which": "^3.0.0"
+    },
     "devDependencies": {
         "@types/node": "^7.0.43",
         "@types/vscode": "^1.38.0",
-        "await-spawn": "^3.0.0",
+        "@types/which": "^3.0.0",
         "tslint": "^5.8.0",
         "typescript": "^3.5.1"
     }

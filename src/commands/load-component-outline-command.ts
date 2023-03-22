@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { sync as whichSync } from 'which';
 import { asyncSpawn } from '../async-spawn';
 
 import { ExtensionContext } from '../extension-context';
@@ -16,10 +17,15 @@ export function registerLoadComponentOutlineCommand(context: ExtensionContext) {
 
         // Get path to Circuit Diagram exe
         const config = vscode.workspace.getConfiguration('circuitDiagram');
-        const executablePath = config.get<string>('executablePath');
+        let executablePath = config.get<string>('executablePath');
         if (executablePath === null) {
-            vscode.window.showErrorMessage('Path to Circuit Diagram executable not set.');
-            return;
+            const pathExe = whichSync('circuit-diagram-cli', { nothrow: true });
+            if (pathExe) {
+                executablePath = pathExe;
+            } else {
+                vscode.window.showErrorMessage('Path to Circuit Diagram executable not set.');
+                return;
+            }
         }
         if (!fs.existsSync(executablePath)) {
             vscode.window.showErrorMessage('Circuit Diagram executable is set to a path that does not exist.');
